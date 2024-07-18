@@ -4,10 +4,16 @@ import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import os
 
 # ตั้งค่าการเชื่อมต่อกับ Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-credentials = Credentials.from_service_account_file("/Users/thapakon/Desktop/Test_python/test_checkin/credentials.json", scopes=scope)
+
+# ใช้เส้นทางสัมพัทธ์ในการระบุไฟล์ credentials.json
+base_dir = os.path.dirname(os.path.abspath(__file__))
+credential_path = os.path.join(base_dir, 'credentials.json')
+
+credentials = Credentials.from_service_account_file(credential_path, scopes=scope)
 gc = gspread.authorize(credentials)
 
 # ใช้ลิงก์ Google Sheets เพื่อเปิดสเปรดชีต
@@ -24,6 +30,9 @@ annotator_df = pd.DataFrame(annotator_data)
 nicknames = annotator_df["Nickname"].tolist()
 name = annotator_df["Name"].tolist()
 
+# ตัวอย่างการใช้ข้อมูลที่อ่านมา
+st.write("Nicknames:", nicknames)
+st.write("Names:", name)
 # ตั้งค่าเริ่มต้นของ session state
 if "logged_in_employee" not in st.session_state:
     st.session_state["logged_in_employee"] = None
